@@ -22,7 +22,12 @@ class Student {
 
     @Override
     public boolean equals(Object obj) {
-        return hashCode() == obj.hashCode();
+        if (obj instanceof Student) {
+            return hashCode() == obj.hashCode();
+        }
+        else {
+            return false;
+        }
     }
 
     public double getGPA() {

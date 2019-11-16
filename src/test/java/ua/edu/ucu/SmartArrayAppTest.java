@@ -1,6 +1,11 @@
 package ua.edu.ucu;
 
 import org.junit.Test;
+import ua.edu.ucu.functions.MyComparator;
+import ua.edu.ucu.functions.MyFunction;
+import ua.edu.ucu.functions.MyPredicate;
+import ua.edu.ucu.smartarr.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -36,5 +41,145 @@ public class SmartArrayAppTest {
         String[] expectedStudentNames = {"Borek Tomasz", "Kranga Antons", "Sutter Burr"};
 
         assertArrayEquals(expectedStudentNames, studentNames);
+    }
+
+    @Test
+    public void sortDecoratorTest() {
+        Object[] arr = {5, 4, 8, 1, 0};
+        SmartArray sa = new BaseArray(arr);
+
+        MyComparator cmp = new MyComparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return (int) o2 - (int) o1;
+            }
+        };
+        sa = new SortDecorator(sa, cmp);
+        Object[] res = sa.toArray();
+        Object[] expect = {8, 5, 4, 1, 0};
+        assertArrayEquals(res, expect);
+        assertEquals("SortDecorator", sa.operationDescription());
+        assertEquals(5, sa.size());
+    }
+
+    @Test
+    public void distinctDecoratorTest() {
+        Object[] arr = {5, 4, 8, 8, 1, 4, 0};
+        SmartArray sa = new BaseArray(arr);
+
+        sa = new DistinctDecorator(sa);
+        Object[] res = sa.toArray();
+        Object[] expect = {5, 4, 8, 1, 0};
+        assertArrayEquals(res, expect);
+        assertEquals("DistinctDecorator", sa.operationDescription());
+        assertEquals(5, sa.size());
+    }
+
+    @Test
+    public void filterDecoratorTest() {
+        Object[] arr = {7, 4, 8, 8, 1, 4, 0};
+        SmartArray sa = new BaseArray(arr);
+
+        MyPredicate pr = new MyPredicate() {
+            @Override
+            public boolean test(Object t) {
+                return (int) t >= 7;
+            }
+        };
+        sa = new FilterDecorator(sa, pr);
+        Object[] res = sa.toArray();
+        Object[] expect = {7, 8, 8};
+        assertArrayEquals(res, expect);
+        assertEquals("FilterDecorator", sa.operationDescription());
+        assertEquals(3, sa.size());
+    }
+
+    @Test
+    public void mapDecoratorTest() {
+        Object[] arr = {-3, 0, 17, 10, 123};
+        SmartArray sa = new BaseArray(arr);
+
+        MyFunction fnc = new MyFunction() {
+            @Override
+            public Object apply(Object t) {
+                return (int) t * 10;
+            }
+        };
+        sa = new MapDecorator(sa, fnc);
+        Object[] res = sa.toArray();
+        Object[] expect = {-30, 0, 170, 100, 1230};
+        assertArrayEquals(res, expect);
+        assertEquals("MapDecorator", sa.operationDescription());
+        assertEquals(5, sa.size());
+    }
+
+    @Test
+    public void emptyDecoratorsTestF() {
+        Object[] arr = {};
+        SmartArray sa = new BaseArray(arr);
+
+        MyPredicate pr = new MyPredicate() {
+            @Override
+            public boolean test(Object t) {
+                return (int) t >= 7;
+            }
+        };
+        sa = new FilterDecorator(sa, pr);
+        Object[] res = sa.toArray();
+        Object[] expect = {};
+        assertArrayEquals(res, expect);
+        assertEquals("FilterDecorator", sa.operationDescription());
+        assertEquals(0, sa.size());
+    }
+
+    @Test
+    public void emptyDecoratorsTestM() {
+        Object[] arr = {};
+        SmartArray sa = new BaseArray(arr);
+
+        MyFunction fnc = new MyFunction() {
+            @Override
+            public Object apply(Object t) {
+                return (int) t * 10;
+            }
+        };
+        sa = new MapDecorator(sa, fnc);
+        Object[] res = sa.toArray();
+        Object[] expect = {};
+        assertArrayEquals(res, expect);
+        assertEquals("MapDecorator", sa.operationDescription());
+        assertEquals(0, sa.size());
+    }
+
+    @Test
+    public void emptyDecoratorsTestD() {
+        Object[] arr = {};
+        SmartArray sa = new BaseArray(arr);
+
+        sa = new DistinctDecorator(sa);
+        Object[] res = sa.toArray();
+        Object[] expect = {};
+        assertArrayEquals(res, expect);
+        assertEquals("DistinctDecorator", sa.operationDescription());
+        assertEquals(0, sa.size());
+    }
+
+    @Test
+    public void emptyDecoratorsTestC() {
+        Object[] arr = {};
+        SmartArray sa = new BaseArray(arr);
+
+        MyComparator cmp = new MyComparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return (int) o2 - (int) o1;
+            }
+        };
+        sa = new SortDecorator(sa, cmp);
+        Object[] res = sa.toArray();
+        Object[] expect = {};
+        assertArrayEquals(res, expect);
+        assertEquals("SortDecorator", sa.operationDescription());
+        assertEquals(0, sa.size());
     }
 }
