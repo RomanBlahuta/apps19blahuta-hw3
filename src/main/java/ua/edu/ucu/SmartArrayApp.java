@@ -4,8 +4,12 @@ import java.util.Arrays;
 import ua.edu.ucu.functions.MyComparator;
 import ua.edu.ucu.functions.MyFunction;
 import ua.edu.ucu.functions.MyPredicate;
+import ua.edu.ucu.smartarr.*;
 
 public class SmartArrayApp {
+
+    static final double GPATHRESHOLD = 4;
+    static final int MINYEAR = 2;
 
     public static Integer[]
             filterPositiveIntegersSortAndMultiplyBy2(Integer[] integers) {
@@ -54,6 +58,44 @@ public class SmartArrayApp {
         // Hint: to convert Object[] to String[] - use the following code
         //Object[] result = studentSmartArray.toArray();
         //return Arrays.copyOf(result, result.length, String[].class);
-        return null;
+
+        SmartArray studentSmartArray = new BaseArray(students);
+        studentSmartArray = new DistinctDecorator(studentSmartArray);
+
+        MyPredicate pr = new MyPredicate() {
+            @Override
+            public boolean test(Object t) {
+                return ((Student) t).getYear() == MINYEAR;
+            }
+        };
+        studentSmartArray = new FilterDecorator(studentSmartArray, pr);
+
+        MyPredicate pr2 = new MyPredicate() {
+            @Override
+            public boolean test(Object t) {
+                return ((Student) t).getGPA() >= GPATHRESHOLD;
+            }
+        };
+        studentSmartArray = new FilterDecorator(studentSmartArray, pr2);
+
+        MyComparator cmp = new MyComparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                String surname1 = ((Student) o1).getSurname();
+                String surname2 = ((Student) o2).getSurname();
+                return surname1.compareTo(surname2);
+            }
+        };
+        studentSmartArray = new SortDecorator(studentSmartArray, cmp);
+
+        MyFunction fnc = new MyFunction() {
+            @Override
+            public Object apply(Object t) {
+                return ((Student) t).getSurname() + ' ' + ((Student) t).getName();
+            }
+        };
+        studentSmartArray = new MapDecorator(studentSmartArray, fnc);
+        Object[] result = studentSmartArray.toArray();
+        return Arrays.copyOf(result, result.length, String[].class);
     }
 }

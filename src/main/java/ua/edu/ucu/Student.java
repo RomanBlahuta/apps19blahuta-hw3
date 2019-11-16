@@ -15,6 +15,16 @@ class Student {
         this.surname = surname;
     }
 
+    @Override
+    public int hashCode() {
+        return name.hashCode() + surname.hashCode() + year * 2 + (int)GPA * 2;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return hashCode() == obj.hashCode();
+    }
+
     public double getGPA() {
         return GPA;
     }
