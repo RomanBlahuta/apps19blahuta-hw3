@@ -6,7 +6,6 @@ abstract class SmartArrayDecorator implements SmartArray {
     protected Object[] arr;
 
     public SmartArrayDecorator(SmartArray smartArray) {
-        this.smartArray = smartArray;
         arr = smartArray.toArray();
     }
 

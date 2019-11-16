@@ -58,7 +58,6 @@ public class SmartArrayApp {
         // Hint: to convert Object[] to String[] - use the following code
         //Object[] result = studentSmartArray.toArray();
         //return Arrays.copyOf(result, result.length, String[].class);
-        SmartArray empty = new BaseArray(new Object[] {});
         SmartArray studentSmartArray = new BaseArray(students);
         studentSmartArray = new DistinctDecorator(studentSmartArray);
 
